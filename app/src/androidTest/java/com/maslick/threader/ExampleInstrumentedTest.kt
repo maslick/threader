@@ -41,6 +41,19 @@ class ExampleInstrumentedTest {
         Thread.sleep(10000)
     }
 
+    @Test
+    fun usingThread() {
+        // Context of the app under test.
+        val appContext = InstrumentationRegistry.getTargetContext()
+        assertEquals("com.maslick.threader", appContext.packageName)
+
+        val device = DeviceSameThread(callback)
+        println("Calling thread: ${Thread.currentThread().name}")
+        device.connect()
+        device.disconnect()
+        Thread.sleep(10000)
+    }
+
     val callback = object : LifecycleCallback {
         override fun onConnected(device: String) {
             println("Successfully connected: ${device}, thread: ${Thread.currentThread().name}")

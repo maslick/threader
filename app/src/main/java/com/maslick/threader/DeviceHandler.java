@@ -2,6 +2,7 @@ package com.maslick.threader;
 
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.util.Log;
 
 /**
  * Created by maslick on 04/02/18.
@@ -11,10 +12,10 @@ public class DeviceHandler {
 
     private LifecycleCallback lifecycleCallback;
     private Handler mCallbackHandler;
-
+    private final String TAG = this.getClass().getName();
 
     private static HandlerThread makeThread() {
-        HandlerThread handlerThread = new HandlerThread("MyDevice_callback_thread_Handler");
+        HandlerThread handlerThread = new HandlerThread("DeviceHandler_thread");
         handlerThread.start();
         return handlerThread;
     }
@@ -29,19 +30,23 @@ public class DeviceHandler {
     }
 
     public void connect() {
+        Log.d(TAG, "connecting...");
+        Log.d(TAG, "thread before: " + Thread.currentThread().getName());
         mCallbackHandler.postDelayed(() -> {
-            System.out.println("##################");
-            System.out.println("connecting..." + " " + Thread.currentThread().getName());
-            System.out.println("##################");
+            Log.d(TAG, "##################");
+            Log.d(TAG, "thread inside handler: " + Thread.currentThread().getName());
+            Log.d(TAG, "##################");
             lifecycleCallback.onConnected("123-456");
         }, 2000);
     }
 
     public void disconnect() {
+        Log.d(TAG, "disconnecting...");
+        Log.d(TAG, "thread before: " + Thread.currentThread().getName());
         mCallbackHandler.postDelayed(() -> {
-            System.out.println("##################");
-            System.out.println("disconnecting..." + " " + Thread.currentThread().getName());
-            System.out.println("##################");
+            Log.d(TAG, "##################");
+            Log.d(TAG, "thread inside handler: " + Thread.currentThread().getName());
+            Log.d(TAG, "##################");
             lifecycleCallback.onDisconnected();
         }, 2000);
     }

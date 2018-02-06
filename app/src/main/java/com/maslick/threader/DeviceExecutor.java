@@ -1,5 +1,7 @@
 package com.maslick.threader;
 
+import android.util.Log;
+
 import java.util.concurrent.Executor;
 
 /**
@@ -10,6 +12,7 @@ public class DeviceExecutor {
 
     private LifecycleCallback lifecycleCallback;
     private Executor mCallbackHandler;
+    private final String TAG = this.getClass().getName();
 
     public DeviceExecutor(LifecycleCallback lifecycleCallback) {
         this(lifecycleCallback, Threading.USER_THREAD);
@@ -21,11 +24,13 @@ public class DeviceExecutor {
     }
 
     public void connect() {
+        Log.d(TAG, "connecting...");
+        Log.d(TAG, "thread before: " + Thread.currentThread().getName());
         mCallbackHandler.execute(() -> {
             try {
-                System.out.println("##################");
-                System.out.println("thread: " + " " + Thread.currentThread().getName());
-                System.out.println("##################");
+                Log.d(TAG, "##################");
+                Log.d(TAG, "thread inside handler: " + Thread.currentThread().getName());
+                Log.d(TAG, "##################");
                 Thread.sleep(2000);
                 lifecycleCallback.onConnected("123-456");
             } catch (InterruptedException e) {
@@ -35,11 +40,13 @@ public class DeviceExecutor {
     }
 
     public void disconnect() {
+        Log.d(TAG, "disconnecting...");
+        Log.d(TAG, "thread before: " + Thread.currentThread().getName());
         mCallbackHandler.execute(() -> {
             try {
-                System.out.println("##################");
-                System.out.println("disconnecting..." + " " + Thread.currentThread().getName());
-                System.out.println("##################");
+                Log.d(TAG, "##################");
+                Log.d(TAG, "thread inside handler: " + Thread.currentThread().getName());
+                Log.d(TAG, "##################");
                 Thread.sleep(3000);
                 lifecycleCallback.onDisconnected();
             } catch (InterruptedException e) {

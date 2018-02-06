@@ -2,31 +2,43 @@ package com.maslick.threader
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        usingNothing()
+        usingHandler()
         usingDeviceExecutor()
     }
 
-    fun usingDeviceExecutor() {
+    private fun usingDeviceExecutor() {
         val device = DeviceExecutor(callback)
-        println("Calling thread: ${Thread.currentThread().name}")
-        println("Connecting")
         device.connect()
         device.disconnect()
     }
 
-    val callback = object : LifecycleCallback {
+    private fun usingHandler() {
+        val device = DeviceHandler(callback)
+        device.connect()
+        device.disconnect()
+    }
+
+    private fun usingNothing() {
+        val device = DeviceSameThread(callback)
+        device.connect()
+        device.disconnect()
+    }
+
+    private val callback = object : LifecycleCallback {
         override fun onConnected(device: String) {
-            println("Successfully connected: ${device}, thread: ${Thread.currentThread().name}")
+            Log.d("CALLBACK", "Successfully connected: $device, thread: ${Thread.currentThread().name}")
         }
 
         override fun onDisconnected() {
-            println("Disconnected, thread: ${Thread.currentThread().name}")
+            Log.d("CALLBACK", "Disconnected, thread: ${Thread.currentThread().name}")
         }
-
     }
 }
