@@ -1,8 +1,11 @@
 package com.maslick.threader
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import java.util.concurrent.Executor
 
 class MainActivity : AppCompatActivity() {
 
@@ -15,7 +18,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun usingDeviceExecutor() {
-        val device = DeviceExecutor(callback)
+        val device = DeviceExecutor(callback, sameThreadExecutor)
         device.connect()
         device.disconnect()
     }
@@ -41,4 +44,16 @@ class MainActivity : AppCompatActivity() {
             Log.d("CALLBACK", "Disconnected, thread: ${Thread.currentThread().name}")
         }
     }
+
+    private val uiExecutor = object : Executor {
+        private val mHandler = Handler(Looper.getMainLooper())
+
+        override fun execute(command: Runnable) {
+            mHandler.post(command)
+        }
+    }
+
+    private val newThreadExecutor = Threading.USER_THREAD
+
+    private val sameThreadExecutor = Threading.SAME_THREAD
 }
